@@ -64,6 +64,15 @@ func _physics_process(delta: float) -> void:
 		position = position.move_toward(_target_position, distance - remaining)
 
 
+## Instantly moves the spy to the tile at new_position (used by door warps).
+func teleport(new_position: Vector2, new_facing: Vector2i) -> void:
+	global_position = _snap_to_tile_center(new_position)
+	_target_position = position
+	_is_moving = false
+	facing = new_facing
+	_sprite.frame = FACING_FRAMES[facing]
+
+
 ## Reads the input and, if the tile in that direction is free, starts a step.
 ## The spy turns towards the pressed direction even if the step is blocked.
 func _try_start_step() -> void:

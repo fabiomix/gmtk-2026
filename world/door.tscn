@@ -1,0 +1,30 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://world/door.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/sprites/door.png" id="2_texture"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_trigger"]
+size = Vector2(8, 8)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_blocker"]
+size = Vector2(32, 32)
+
+[node name="Door" type="Area2D" groups=["doors"]]
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+script = ExtResource("1_script")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_texture")
+hframes = 2
+
+[node name="Trigger" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_trigger")
+
+[node name="Blocker" type="StaticBody2D" parent="."]
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Blocker"]
+shape = SubResource("RectangleShape2D_blocker")
+disabled = true

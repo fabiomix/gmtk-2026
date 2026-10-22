@@ -1,0 +1,44 @@
+class_name Door
+extends Area2D
+## A door tile placed in a wall gap. When the player steps on it, the door
+## emits player_entered and the World warps the player to the target door.
+## A locked door blocks its tile like a wall (Blocker on the "world" layer).
+
+signal player_entered(door: Door)
+
+## Unique id in the whole lab, e.g. &"cell_east".
+@export var door_id: StringName
+## Id of the door where the player arrives. Empty = leads nowhere (yet).
+@export var target_door_id: StringName
+## Direction from the door towards the inside of its room.
+## The player arrives on that tile, facing that way.
+@export var inside_direction := Vector2i.DOWN
+@export var locked := false:
+	set(value):
+		locked = value
+		if is_node_ready():
+			_update_locked_state()
+
+@onready var _sprite: Sprite2D = $Sprite2D
+@onready var _blocker_shape: CollisionShape2D = $Blocker/CollisionShape2D
+
+
+func _ready() -> void:
+	_update_locked_state()
+	body_entered.connect(_on_body_entered)
+
+
+## Global position of the tile in front of the door, inside the room.
+func get_arrival_position() -> Vector2:
+	return global_position + Vector2(inside_direction * Player.TILE_SIZE)
+
+
+func _update_locked_state() -> void:
+	_sprite.frame = 1 if locked else 0
+	# Deferred: collision shapes must not change in the middle of a physics step.
+	_blocker_shape.set_deferred(&"disabled", not locked)
+
+
+func _on_body_entered(body: Node2D) -> void:
+	if body is Player and not locked:
+		player_entered.emit(self)
