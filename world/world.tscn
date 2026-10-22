@@ -10,4 +10,4 @@
 [node name="TestRoom" parent="Rooms" instance=ExtResource("1_test_room")]
 
 [node name="Player" parent="." instance=ExtResource("2_player")]
-position = Vector2(160, 224)
+position = Vector2(176, 240)
