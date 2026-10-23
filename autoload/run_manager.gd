@@ -1,7 +1,7 @@
 extends Node
 ## Autoload "RunManager": state of the current run (a single escape attempt).
-## Everything here is temporary and will be reset at every new run.
-## Persistent state (memories, kept items) will live in GameManager instead.
+## Everything here is temporary: start_run() resets it at every new run.
+## Persistent state (kept items, later memories) lives in GameManager.
 
 signal inventory_changed
 ## Emitted exactly once per run, when the countdown reaches zero.
@@ -16,6 +16,18 @@ var time_left := run_duration
 var state := State.PLAYING
 ## Items carried during this run. Never contains the same item twice.
 var inventory: Array[ItemData] = []
+
+
+## Resets the run state. The items kept at the last capture start in the
+## inventory. Must be called before the World of the new run is created,
+## so its pickups can see those items and not appear twice.
+func start_run() -> void:
+	time_left = run_duration
+	state = State.PLAYING
+	inventory.clear()
+	for id in GameManager.kept_item_ids:
+		inventory.append(ItemData.load_by_id(id))
+	inventory_changed.emit()
 
 
 ## Counts down on the physics clock (fixed 60 ticks/s, like the player's

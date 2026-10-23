@@ -37,9 +37,8 @@ func _initialize() -> void:
 	OS.add_logger(_errors)
 	main = load("res://main/main.tscn").instantiate()
 	root.add_child(main)
-	world = main.get_node("World")
-	player = world.get_node("Player")
-	await frames(2)
+	await frames(2)  # Main creates the World in its _ready()
+	refresh_world()
 	await run_tests()
 	OS.remove_logger(_errors)
 	if _errors.count > 0:
@@ -53,6 +52,12 @@ func _initialize() -> void:
 ## Override in each test.
 func run_tests() -> void:
 	pass
+
+
+## Main creates a new World at every run: call this after a new run starts.
+func refresh_world() -> void:
+	world = main.get_node("World")
+	player = world.get_node("Player")
 
 
 func check(label: String, actual: Variant, expected: Variant) -> void:

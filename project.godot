@@ -16,6 +16,7 @@ config/features=PackedStringArray("4.7", "GL Compatibility")
 
 [autoload]
 
+GameManager="*res://autoload/game_manager.gd"
 RunManager="*res://autoload/run_manager.gd"
 
 [display]

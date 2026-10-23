@@ -24,7 +24,7 @@ grow_vertical = 2
 
 [node name="Box" type="VBoxContainer" parent="Center"]
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 10
 
 [node name="Title" type="Label" parent="Center/Box"]
 layout_mode = 2
@@ -39,13 +39,19 @@ text = "Time's up. The guards found you
 and are taking you back to your cell."
 horizontal_alignment = 1
 
-[node name="ItemsLabel" type="Label" parent="Center/Box"]
+[node name="HintLabel" type="Label" parent="Center/Box"]
 unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0.75)
 layout_mode = 2
 horizontal_alignment = 1
 
-[node name="NextLabel" type="Label" parent="Center/Box"]
-modulate = Color(1, 1, 1, 0.5)
+[node name="ItemList" type="VBoxContainer" parent="Center/Box"]
+unique_name_in_owner = true
 layout_mode = 2
-text = "(Next phase: choose what to keep, then a new run starts.)"
-horizontal_alignment = 1
+size_flags_horizontal = 4
+
+[node name="ConfirmButton" type="Button" parent="Center/Box"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Back to the cell"

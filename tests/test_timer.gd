@@ -58,7 +58,7 @@ func run_tests() -> void:
 	check("game paused on capture", paused, true)
 	check("capture screen visible", capture_screen.visible, true)
 	check("capture screen lists nothing carried",
-			capture_screen.get_node("%ItemsLabel").text, "You were carrying nothing.")
+			capture_screen.get_node("%HintLabel").text, "You were carrying nothing.")
 	check("HUD shows 0:00", timer_label.text, "0:00")
 
 	pos = player.global_position
