@@ -3,6 +3,8 @@
 [ext_resource type="Script" path="res://main/main.gd" id="1_script"]
 [ext_resource type="PackedScene" path="res://world/world.tscn" id="2_world"]
 [ext_resource type="PackedScene" path="res://ui/hud.tscn" id="3_hud"]
+[ext_resource type="PackedScene" path="res://ui/pause_menu.tscn" id="4_pause_menu"]
+[ext_resource type="PackedScene" path="res://ui/capture_screen.tscn" id="5_capture_screen"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_script")
@@ -10,3 +12,7 @@ script = ExtResource("1_script")
 [node name="World" parent="." instance=ExtResource("2_world")]
 
 [node name="HUD" parent="." instance=ExtResource("3_hud")]
+
+[node name="PauseMenu" parent="." instance=ExtResource("4_pause_menu")]
+
+[node name="CaptureScreen" parent="." instance=ExtResource("5_capture_screen")]

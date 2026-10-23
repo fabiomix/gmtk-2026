@@ -3,6 +3,7 @@
 [ext_resource type="Script" path="res://ui/hud.gd" id="1_script"]
 
 [node name="HUD" type="CanvasLayer"]
+process_mode = 3
 layer = 20
 script = ExtResource("1_script")
 
@@ -10,11 +11,27 @@ script = ExtResource("1_script")
 unique_name_in_owner = true
 offset_left = 8.0
 offset_top = 4.0
-offset_right = 632.0
+offset_right = 540.0
 offset_bottom = 27.0
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 4
 text = "Items: -"
+
+[node name="TimerLabel" type="Label" parent="."]
+unique_name_in_owner = true
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -96.0
+offset_top = 2.0
+offset_right = -8.0
+offset_bottom = 30.0
+grow_horizontal = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 20
+text = "2:00"
+horizontal_alignment = 2
 
 [node name="Bottom" type="VBoxContainer" parent="."]
 anchors_preset = 12
