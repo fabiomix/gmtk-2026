@@ -2,7 +2,9 @@ class_name Door
 extends Area2D
 ## A door tile placed in a wall gap. When the player steps on it, the door
 ## emits player_entered and the World warps the player to the target door.
-## A locked door blocks its tile like a wall (Blocker on the "world" layer).
+## A locked door blocks its tile like a wall (Blocker on the "world" layer);
+## if it has a required_item, the player can unlock it by interacting with it.
+## Unlocking lasts only for the current run (the World is rebuilt every run).
 
 signal player_entered(door: Door)
 
@@ -18,6 +20,9 @@ signal player_entered(door: Door)
 		locked = value
 		if is_node_ready():
 			_update_locked_state()
+## Item that unlocks this door. Empty = it can't be unlocked by the player.
+## The item is not consumed.
+@export var required_item: ItemData
 
 @onready var _sprite: Sprite2D = $Sprite2D
 @onready var _blocker_shape: CollisionShape2D = $Blocker/CollisionShape2D
@@ -31,6 +36,25 @@ func _ready() -> void:
 ## Global position of the tile in front of the door, inside the room.
 func get_arrival_position() -> Vector2:
 	return global_position + Vector2(inside_direction * Player.TILE_SIZE)
+
+
+## Interactable: only locked doors can be interacted with.
+func get_prompt() -> String:
+	if not locked:
+		return ""
+	if required_item and RunManager.has_item(required_item.id):
+		return "Unlock with %s" % required_item.display_name
+	return "Examine door"
+
+
+## Interactable: returns the message to show to the player.
+func interact(_player: Player) -> String:
+	if required_item == null:
+		return "Locked. No way to open it from this side."
+	if not RunManager.has_item(required_item.id):
+		return "Locked. It needs: %s." % required_item.display_name
+	locked = false
+	return "Unlocked with %s." % required_item.display_name
 
 
 func _update_locked_state() -> void:

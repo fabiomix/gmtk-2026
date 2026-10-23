@@ -2,6 +2,8 @@
 
 [ext_resource type="TileSet" uid="uid://dxkeoai7vpdct" path="res://world/tiles/lab_tileset.tres" id="1_i35s0"]
 [ext_resource type="PackedScene" path="res://world/door.tscn" id="2_orbch"]
+[ext_resource type="PackedScene" path="res://interactables/pickup.tscn" id="3_pickup"]
+[ext_resource type="Resource" path="res://data/items/security_badge.tres" id="4_badge"]
 
 [node name="Corridor" type="Node2D" unique_id=68481742]
 
@@ -20,4 +22,12 @@ inside_direction = Vector2i(1, 0)
 [node name="CorridorNorth" parent="Doors" unique_id=266607304 instance=ExtResource("2_orbch")]
 position = Vector2(304, 16)
 door_id = &"corridor_north"
+target_door_id = &"archive_south"
 locked = true
+required_item = ExtResource("4_badge")
+
+[node name="Items" type="Node2D" parent="."]
+
+[node name="SecurityBadge" parent="Items" instance=ExtResource("3_pickup")]
+position = Vector2(528, 80)
+item = ExtResource("4_badge")

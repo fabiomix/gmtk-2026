@@ -2,8 +2,17 @@ class_name Player
 extends CharacterBody2D
 ## Top-down spy with Pokémon-style grid movement: 4 directions, one tile per step.
 ## A step is blocked if the target tile contains something on the "world"
-## physics layer (walls, crates and, later, closed doors).
+## physics layer (walls, crates, pickups and locked doors).
 ## Rooms must be placed at multiples of TILE_SIZE so tile centers line up.
+##
+## Interactions: the spy interacts with the tile in front (see facing).
+## An "interactable" is any node that:
+##   - is in the group "interactables" and sits on a tile center;
+##   - has get_prompt() -> String  (HUD text; "" = nothing to do right now);
+##   - has interact(player: Player) -> String  (message shown to the player).
+
+signal interaction_prompt_changed(text: String)
+signal interacted(message: String)
 
 const TILE_SIZE := 32
 
@@ -27,11 +36,12 @@ const FACING_FRAMES := {
 ## Walking speed in tiles per second.
 @export var tiles_per_second: float = 6.0
 
-## Direction the spy is looking at. Interactions will use the tile in front.
+## Direction the spy is looking at. Interactions use the tile in front.
 var facing := Vector2i.DOWN
 
 var _is_moving := false
 var _target_position := Vector2.ZERO
+var _prompt := ""
 
 @onready var _sprite: Sprite2D = $Sprite2D
 
@@ -45,10 +55,25 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	if not _is_moving:
+		if Input.is_action_just_pressed(&"interact"):
+			_interact()
 		_try_start_step()
-		if not _is_moving:
-			return
+	if _is_moving:
+		_move(delta)
+	_update_prompt()
 
+
+## Instantly moves the spy to the tile at new_position (used by door warps).
+func teleport(new_position: Vector2, new_facing: Vector2i) -> void:
+	global_position = _snap_to_tile_center(new_position)
+	_target_position = position
+	_is_moving = false
+	facing = new_facing
+	_sprite.frame = FACING_FRAMES[facing]
+
+
+## Moves towards the target tile center.
+func _move(delta: float) -> void:
 	var distance := tiles_per_second * TILE_SIZE * delta
 	var remaining := position.distance_to(_target_position)
 	if distance < remaining:
@@ -64,13 +89,37 @@ func _physics_process(delta: float) -> void:
 		position = position.move_toward(_target_position, distance - remaining)
 
 
-## Instantly moves the spy to the tile at new_position (used by door warps).
-func teleport(new_position: Vector2, new_facing: Vector2i) -> void:
-	global_position = _snap_to_tile_center(new_position)
-	_target_position = position
-	_is_moving = false
-	facing = new_facing
-	_sprite.frame = FACING_FRAMES[facing]
+func _interact() -> void:
+	var target = _get_interactable_in_front()
+	if target == null:
+		return
+	var message: String = target.interact(self)
+	if message != "":
+		interacted.emit(message)
+
+
+## Updates the HUD prompt only when the text changes.
+func _update_prompt() -> void:
+	var text := ""
+	if not _is_moving:
+		var target = _get_interactable_in_front()
+		if target != null:
+			text = target.get_prompt()
+	if text != _prompt:
+		_prompt = text
+		interaction_prompt_changed.emit(_prompt)
+
+
+## Returns the interactable on the tile in front of the spy, or null.
+## Untyped on purpose: interactables have different base types (Pickup, Door...).
+func _get_interactable_in_front():
+	var front := global_position + Vector2(facing * TILE_SIZE)
+	for node in get_tree().get_nodes_in_group(&"interactables"):
+		if node.is_queued_for_deletion():
+			continue
+		if node.global_position.distance_to(front) < 1.0 and node.get_prompt() != "":
+			return node
+	return null
 
 
 ## Reads the input and, if the tile in that direction is free, starts a step.

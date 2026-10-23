@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" path="res://world/rooms/cell.tscn" id="2_cell"]
 [ext_resource type="PackedScene" path="res://world/rooms/corridor.tscn" id="3_corridor"]
 [ext_resource type="PackedScene" path="res://player/player.tscn" id="4_player"]
+[ext_resource type="PackedScene" path="res://world/rooms/archive.tscn" id="5_archive"]
 
 [node name="World" type="Node2D"]
 script = ExtResource("1_script")
@@ -14,6 +15,9 @@ script = ExtResource("1_script")
 
 [node name="Corridor" parent="Rooms" instance=ExtResource("3_corridor")]
 position = Vector2(1024, 0)
+
+[node name="Archive" parent="Rooms" instance=ExtResource("5_archive")]
+position = Vector2(2048, 0)
 
 [node name="Player" parent="." instance=ExtResource("4_player")]
 position = Vector2(80, 112)
