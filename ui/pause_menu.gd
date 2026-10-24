@@ -22,6 +22,8 @@ func _ready() -> void:
 	_resume_button.pressed.connect(close)
 	_new_game_button.pressed.connect(_show_confirm.bind(true))
 	_quit_button.pressed.connect(get_tree().quit)
+	# In a browser the game can't close itself: the player closes the tab.
+	_quit_button.visible = not OS.has_feature("web")
 	_yes_button.pressed.connect(_on_yes_pressed)
 	_no_button.pressed.connect(_show_confirm.bind(false))
 

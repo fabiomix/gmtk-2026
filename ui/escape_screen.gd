@@ -20,6 +20,8 @@ func _ready() -> void:
 	hide()
 	_new_game_button.pressed.connect(_on_new_game_pressed)
 	_quit_button.pressed.connect(get_tree().quit)
+	# In a browser the game can't close itself: the player closes the tab.
+	_quit_button.visible = not OS.has_feature("web")
 
 
 func open() -> void:

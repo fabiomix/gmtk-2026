@@ -36,6 +36,7 @@ func _initialize() -> void:
 	_evacuation_plan()
 	_clipboard()
 	_memo()
+	_icon()
 	quit()
 
 
@@ -273,3 +274,19 @@ func _memo() -> void:
 	for y in [13, 16, 19]:
 		img.fill_rect(Rect2i(12, y, 8, 1), Color("8a8f99"))
 	img.save_png("res://assets/sprites/memo.png")
+
+
+## Game icon: the spy's tri-lens night-vision goggles, drawn at 32x32 and
+## scaled x4 without filtering (128x128, crisp pixels).
+func _icon() -> void:
+	var img := Image.create(32, 32, false, Image.FORMAT_RGBA8)
+	img.fill_rect(Rect2i(1, 1, 30, 30), Color("2b2f3a"))     # background
+	img.fill_rect(Rect2i(7, 4, 18, 26), STEALTH)             # balaclava
+	img.fill_rect(Rect2i(5, 12, 22, 7), GOGGLES)             # goggle band
+	for lens in [Rect2i(7, 13, 5, 5), Rect2i(20, 13, 5, 5), Rect2i(13, 9, 6, 6)]:
+		img.fill_rect(lens.grow(1), Color("1b1e24"))          # lens rim
+		img.fill_rect(lens, LENS)
+		img.set_pixelv(lens.position, Color("c8ffd5"))        # glint
+	_outline(img, Rect2i(1, 1, 30, 30), OUTLINE)
+	img.resize(128, 128, Image.INTERPOLATE_NEAREST)
+	img.save_png("res://assets/icon.png")

@@ -14,6 +14,10 @@ func run_tests() -> void:
 	var pause_menu: CanvasLayer = main.get_node("PauseMenu")
 	var capture_screen: CanvasLayer = main.get_node("CaptureScreen")
 
+	# Keys: P pauses too (Esc leaves fullscreen in browsers), J and Tab open the journal.
+	check("pause keys", action_keys(&"pause"), [KEY_ESCAPE, KEY_P])
+	check("journal keys", action_keys(&"journal"), [KEY_J, KEY_TAB])
+
 	# Countdown runs in real time: 60 physics ticks = 1 second.
 	check("run lasts 60 s", run_manager.run_duration, 60.0)
 	var t0: float = run_manager.time_left
@@ -69,3 +73,11 @@ func run_tests() -> void:
 	check("Esc doesn't open the pause menu on the capture screen", pause_menu.visible, false)
 	check("still paused", paused, true)
 	check("still captured only once", captured_count, 1)
+
+
+func action_keys(action: StringName) -> Array:
+	var keys := []
+	for event in InputMap.action_get_events(action):
+		if event is InputEventKey:
+			keys.append(event.physical_keycode)
+	return keys
