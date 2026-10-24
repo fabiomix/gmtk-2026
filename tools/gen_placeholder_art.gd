@@ -17,11 +17,15 @@ func _initialize() -> void:
 	_door()
 	_screwdriver()
 	_security_badge()
-	_archive_key()
 	_lab_report()
 	_cabinet()
 	_filing_cabinet()
 	_exit()
+	_scratches()
+	_sign()
+	_evacuation_plan()
+	_clipboard()
+	_memo()
 	quit()
 
 
@@ -99,17 +103,6 @@ func _security_badge() -> void:
 	img.save_png("res://assets/sprites/items/security_badge.png")
 
 
-func _archive_key() -> void:
-	var img := Image.create(32, 32, false, Image.FORMAT_RGBA8)
-	var brass := Color("d9a400")
-	img.fill_rect(Rect2i(8, 10, 10, 10), brass)             # bow
-	img.fill_rect(Rect2i(11, 13, 4, 4), Color(0, 0, 0, 0))  # hole in the bow
-	img.fill_rect(Rect2i(18, 14, 8, 2), brass)              # shaft
-	img.fill_rect(Rect2i(22, 16, 2, 3), brass)              # tooth
-	img.fill_rect(Rect2i(25, 16, 1, 4), brass)              # tooth
-	img.save_png("res://assets/sprites/items/archive_key.png")
-
-
 func _lab_report() -> void:
 	var img := Image.create(32, 32, false, Image.FORMAT_RGBA8)
 	img.fill_rect(Rect2i(8, 6, 16, 21), Color("c9a86a"))    # folder
@@ -160,3 +153,60 @@ func _exit() -> void:
 	img.fill_rect(Rect2i(21, 16, 2, 5), Color("e8e8e8"))
 	img.fill_rect(Rect2i(23, 18, 1, 1), Color("e8e8e8"))
 	img.save_png("res://assets/sprites/exit.png")
+
+
+## Notes are drawn on top of a wall or furniture tile (transparent background).
+
+## Tally marks and a scratched line of "text" on the cell wall.
+func _scratches() -> void:
+	var img := Image.create(32, 32, false, Image.FORMAT_RGBA8)
+	var scratch := Color("d5dae2")
+	for x in [8, 11, 14, 17]:
+		img.fill_rect(Rect2i(x, 8, 1, 9), scratch)              # tally marks
+	for i in 12:
+		img.set_pixel(6 + i, 15 - i / 2, scratch)                # diagonal stroke
+	for x in [6, 10, 13, 18, 21, 24]:
+		img.fill_rect(Rect2i(x, 21, 2, 1), scratch)              # scratched words
+	img.save_png("res://assets/sprites/scratches.png")
+
+
+## Blue direction sign with white lines of text.
+func _sign() -> void:
+	var img := Image.create(32, 32, false, Image.FORMAT_RGBA8)
+	img.fill_rect(Rect2i(4, 8, 24, 14), Color("2d5fa8"))
+	img.fill_rect(Rect2i(5, 9, 22, 12), Color("3a74c4"))
+	for y in [11, 14, 17]:
+		img.fill_rect(Rect2i(8, y, 16, 1), Color("e8e8e8"))
+	img.save_png("res://assets/sprites/sign.png")
+
+
+## Evacuation plan: white sheet, green border, a tiny map with a red dot.
+func _evacuation_plan() -> void:
+	var img := Image.create(32, 32, false, Image.FORMAT_RGBA8)
+	img.fill_rect(Rect2i(5, 5, 22, 20), Color("2f9e4f"))
+	img.fill_rect(Rect2i(6, 6, 20, 18), Color("f2efe6"))
+	for r in [Rect2i(8, 8, 5, 4), Rect2i(14, 8, 9, 4), Rect2i(8, 14, 15, 3), Rect2i(8, 18, 6, 4)]:
+		img.fill_rect(r, Color("8a8f99"))
+	img.fill_rect(Rect2i(21, 18, 2, 2), Color("d33a3a"))    # "you are here"
+	img.save_png("res://assets/sprites/evacuation_plan.png")
+
+
+## Guard log: clipboard with a sheet of paper.
+func _clipboard() -> void:
+	var img := Image.create(32, 32, false, Image.FORMAT_RGBA8)
+	img.fill_rect(Rect2i(9, 6, 14, 21), Color("7a5a3a"))     # board
+	img.fill_rect(Rect2i(11, 9, 10, 16), Color("f2efe6"))    # paper
+	img.fill_rect(Rect2i(13, 4, 6, 3), Color("b5bac4"))      # clip
+	for y in [12, 15, 18, 21]:
+		img.fill_rect(Rect2i(12, y, 8, 1), Color("8a8f99"))
+	img.save_png("res://assets/sprites/clipboard.png")
+
+
+## Internal memo: a sheet with a red stamp.
+func _memo() -> void:
+	var img := Image.create(32, 32, false, Image.FORMAT_RGBA8)
+	img.fill_rect(Rect2i(10, 6, 12, 18), Color("f2efe6"))
+	img.fill_rect(Rect2i(12, 8, 5, 3), Color("d33a3a"))      # stamp
+	for y in [13, 16, 19]:
+		img.fill_rect(Rect2i(12, y, 8, 1), Color("8a8f99"))
+	img.save_png("res://assets/sprites/memo.png")

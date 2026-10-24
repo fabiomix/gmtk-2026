@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="MemoryData" format=3]
+
+[ext_resource type="Script" path="res://data/memory_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"evacuation_plan"
+title = "Evacuation plan"
+text = "Evacuation plan on the corridor wall: the way out is east, through the laboratory."
+category = 0

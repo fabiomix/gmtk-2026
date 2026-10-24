@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="MemoryData" format=3]
+
+[ext_resource type="Script" path="res://data/memory_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"cell_scratches"
+title = "Scratches on the wall"
+text = "Scratched into the cell wall by someone before you: \"{patrol_minutes} MINUTES BETWEEN ROUNDS. THEN THEY COME LOOKING.\""
+category = 0

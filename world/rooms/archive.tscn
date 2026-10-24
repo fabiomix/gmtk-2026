@@ -4,8 +4,12 @@
 [ext_resource type="PackedScene" path="res://world/door.tscn" id="2_door"]
 [ext_resource type="PackedScene" path="res://interactables/cabinet.tscn" id="3_cabinet"]
 [ext_resource type="Texture2D" path="res://assets/sprites/filing_cabinet.png" id="4_texture"]
-[ext_resource type="Resource" path="res://data/items/archive_key.tres" id="5_key"]
 [ext_resource type="Resource" path="res://data/items/lab_report.tres" id="6_report"]
+[ext_resource type="PackedScene" path="res://interactables/note.tscn" id="9_note"]
+[ext_resource type="Texture2D" path="res://assets/sprites/memo.png" id="10_texture"]
+[ext_resource type="Resource" path="res://data/memories/archive_cabinet_code.tres" id="11_code"]
+[ext_resource type="Resource" path="res://data/memories/lock_archive_cabinet.tres" id="12_lock"]
+[ext_resource type="Resource" path="res://data/memories/glasswing_memo.tres" id="13_memo"]
 
 [node name="Archive" type="Node2D" unique_id=280545648]
 
@@ -27,5 +31,12 @@ inside_direction = Vector2i(0, -1)
 position = Vector2(176, 48)
 display_name = "filing cabinet"
 texture = ExtResource("4_texture")
-required_item = ExtResource("5_key")
+required_memory = ExtResource("11_code")
+lock_memory = ExtResource("12_lock")
 contents = ExtResource("6_report")
+
+[node name="Memo" parent="Items" unique_id=118449992 instance=ExtResource("9_note")]
+position = Vector2(240, 48)
+prompt = "Read memo"
+texture = ExtResource("10_texture")
+memory = ExtResource("13_memo")

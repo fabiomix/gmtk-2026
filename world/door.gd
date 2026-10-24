@@ -23,6 +23,9 @@ signal player_entered(door: Door)
 ## Item that unlocks this door. Empty = it can't be unlocked by the player.
 ## The item is not consumed.
 @export var required_item: ItemData
+## Journal note about the lock, recorded when the player interacts with the
+## locked door (just a reminder: it's never needed to unlock it).
+@export var lock_memory: MemoryData
 
 @onready var _sprite: Sprite2D = $Sprite2D
 @onready var _blocker_shape: CollisionShape2D = $Blocker/CollisionShape2D
@@ -49,6 +52,8 @@ func get_prompt() -> String:
 
 ## Interactable: returns the message to show to the player.
 func interact(_player: Player) -> String:
+	if lock_memory:
+		GameManager.discover(lock_memory)
 	if required_item == null:
 		return "Locked. No way to open it from this side."
 	if not RunManager.has_item(required_item.id):

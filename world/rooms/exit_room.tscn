@@ -3,8 +3,9 @@
 [ext_resource type="TileSet" path="res://world/tiles/lab_tileset.tres" id="1_cdi7d"]
 [ext_resource type="PackedScene" path="res://world/door.tscn" id="2_door"]
 [ext_resource type="PackedScene" path="res://world/exit.tscn" id="3_exit"]
-[ext_resource type="PackedScene" path="res://interactables/pickup.tscn" id="4_pickup"]
-[ext_resource type="Resource" path="res://data/items/archive_key.tres" id="5_key"]
+[ext_resource type="PackedScene" path="res://interactables/note.tscn" id="9_note"]
+[ext_resource type="Texture2D" path="res://assets/sprites/clipboard.png" id="10_texture"]
+[ext_resource type="Resource" path="res://data/memories/archive_cabinet_code.tres" id="11_memory"]
 
 [node name="ExitRoom" type="Node2D" unique_id=1260609893]
 
@@ -25,6 +26,8 @@ position = Vector2(304, 112)
 
 [node name="Items" type="Node2D" parent="." unique_id=684326413]
 
-[node name="ArchiveKey" parent="Items" unique_id=345611065 instance=ExtResource("4_pickup")]
-position = Vector2(144, 48)
-item = ExtResource("5_key")
+[node name="GuardLog" parent="Items" unique_id=503403884 instance=ExtResource("9_note")]
+position = Vector2(176, 48)
+prompt = "Read guard log"
+texture = ExtResource("10_texture")
+memory = ExtResource("11_memory")

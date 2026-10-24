@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="MemoryData" format=3]
+
+[ext_resource type="Script" path="res://data/memory_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"glasswing_memo"
+title = "GLASSWING memo"
+text = "Internal memo: \"GLASSWING Phase I subjects to be moved before the inspection. Paper records stay locked in the archive until then.\""
+category = 2

@@ -6,6 +6,8 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/cabinet.png" id="4_texture"]
 [ext_resource type="Resource" path="res://data/items/screwdriver.tres" id="5_screwdriver"]
 [ext_resource type="Resource" path="res://data/items/security_badge.tres" id="6_badge"]
+[ext_resource type="Resource" path="res://data/memories/lock_lab_door.tres" id="12_lock_door"]
+[ext_resource type="Resource" path="res://data/memories/lock_lab_cabinet.tres" id="13_lock_cabinet"]
 
 [node name="Laboratory" type="Node2D" unique_id=1515028218]
 
@@ -28,6 +30,7 @@ target_door_id = &"exit_west"
 inside_direction = Vector2i(-1, 0)
 locked = true
 required_item = ExtResource("6_badge")
+lock_memory = ExtResource("12_lock_door")
 
 [node name="Items" type="Node2D" parent="." unique_id=1852977140]
 
@@ -35,4 +38,5 @@ required_item = ExtResource("6_badge")
 position = Vector2(208, 48)
 texture = ExtResource("4_texture")
 required_item = ExtResource("5_screwdriver")
+lock_memory = ExtResource("13_lock_cabinet")
 contents = ExtResource("6_badge")

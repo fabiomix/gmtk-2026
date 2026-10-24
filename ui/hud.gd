@@ -1,9 +1,9 @@
 class_name HUD
 extends CanvasLayer
 ## Heads-up display: run inventory (top left), countdown (top right),
-## interaction prompt and short messages (bottom).
-## Inventory and countdown read RunManager by themselves; prompt and
-## messages are fed by Main (from the Player signals).
+## journal updates, short messages and interaction prompt (bottom).
+## Inventory, countdown and journal updates come from the autoloads;
+## prompt and messages are fed by Main (from the Player signals).
 ## Process mode is Always, so the countdown shows 0:00 even after the
 ## capture has paused the game.
 
@@ -14,17 +14,22 @@ const LOW_TIME_COLOR := Color(1, 0.35, 0.35)
 
 @onready var _inventory_label: Label = %InventoryLabel
 @onready var _timer_label: Label = %TimerLabel
+@onready var _journal_label: Label = %JournalLabel
 @onready var _message_label: Label = %MessageLabel
 @onready var _prompt_label: Label = %PromptLabel
 @onready var _message_timer: Timer = $MessageTimer
+@onready var _journal_timer: Timer = $JournalTimer
 
 
 func _ready() -> void:
 	RunManager.inventory_changed.connect(_update_inventory)
+	GameManager.memory_discovered.connect(_on_memory_discovered)
 	_message_timer.timeout.connect(_on_message_timer_timeout)
+	_journal_timer.timeout.connect(_on_journal_timer_timeout)
 	_update_inventory()
 	show_prompt("")
 	_message_label.text = ""
+	_journal_label.text = ""
 
 
 func _process(_delta: float) -> void:
@@ -56,3 +61,16 @@ func _update_inventory() -> void:
 
 func _on_message_timer_timeout() -> void:
 	_message_label.text = ""
+
+
+func _on_memory_discovered(memory: MemoryData) -> void:
+	# Locks are noted silently: they come from an interaction that already
+	# shows its own message ("Locked. It needs: ..."), one line is enough.
+	if memory.category == MemoryData.Category.LOCK:
+		return
+	_journal_label.text = "Journal: %s" % memory.title
+	_journal_timer.start(MESSAGE_TIME)
+
+
+func _on_journal_timer_timeout() -> void:
+	_journal_label.text = ""

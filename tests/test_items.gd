@@ -2,7 +2,7 @@ extends "res://tests/test_base.gd"
 ## Pickups, cabinets, HUD and a door that requires an item.
 ## Storage: screwdriver at (8,6). Laboratory: cabinet at (6,1) needs the
 ## screwdriver and holds the badge; door lab_east at (13,4) needs the badge.
-## Exit room: archive key at (4,1).
+## (Notes, memories and the combination lock are in test_journal.gd.)
 
 var last_message := ""
 ## Autoload names are not known when a --script is compiled: get the node instead.
@@ -76,14 +76,8 @@ func run_tests() -> void:
 	var warped := await walk_into_door(&"move_right")
 	check("warp into the exit room", warped, true)
 	check("arrived in the exit room", tile_of_player(EXIT_ROOM), Vector2i(1, 3))
-
-	# Archive key on the guard's desk.
-	await walk_to(EXIT_ROOM, Vector2i(4, 2))
-	await face(Vector2i.UP)
-	await press_interact()
-	check("key message", last_message, "Picked up: Archive key.")
-	check("HUD inventory with 3 items", inventory_label.text, "Items: Screwdriver, Security badge, Archive key")
+	check("HUD inventory with 2 items", inventory_label.text, "Items: Screwdriver, Security badge")
 
 	# No duplicates.
 	run_manager.add_item(load("res://data/items/screwdriver.tres"))
-	check("no duplicate items", run_manager.inventory.size(), 3)
+	check("no duplicate items", run_manager.inventory.size(), 2)

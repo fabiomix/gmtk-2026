@@ -106,18 +106,22 @@ func press_interact() -> void:
 	await frames(2)
 
 
-## Sends a real input event (menus use _unhandled_input, which doesn't see
-## Input.action_press).
+## Sends a real input event (menus use _input/_unhandled_input, which don't
+## see Input.action_press). Events are delivered once per *process* frame,
+## not per physics tick (at startup several ticks can run in one frame),
+## so wait for process frames.
 func send_action(action: StringName) -> void:
 	var event := InputEventAction.new()
 	event.action = action
 	event.pressed = true
 	Input.parse_input_event(event)
-	await frames(2)
+	await process_frame
+	await process_frame
 	event = event.duplicate()
 	event.pressed = false
 	Input.parse_input_event(event)
-	await frames(2)
+	await process_frame
+	await process_frame
 
 
 ## Walks in a direction until a warp starts, then waits for it to end.

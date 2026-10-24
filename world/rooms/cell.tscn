@@ -2,6 +2,9 @@
 
 [ext_resource type="TileSet" path="res://world/tiles/lab_tileset.tres" id="1_6sofm"]
 [ext_resource type="PackedScene" path="res://world/door.tscn" id="2_5dyp4"]
+[ext_resource type="PackedScene" path="res://interactables/note.tscn" id="9_note"]
+[ext_resource type="Texture2D" path="res://assets/sprites/scratches.png" id="10_texture"]
+[ext_resource type="Resource" path="res://data/memories/cell_scratches.tres" id="11_memory"]
 
 [node name="Cell" type="Node2D" unique_id=988628615]
 
@@ -18,3 +21,9 @@ target_door_id = &"corridor_west"
 inside_direction = Vector2i(-1, 0)
 
 [node name="Items" type="Node2D" parent="." unique_id=1764521506]
+
+[node name="Scratches" parent="Items" unique_id=520700845 instance=ExtResource("9_note")]
+position = Vector2(144, 16)
+prompt = "Examine scratches"
+texture = ExtResource("10_texture")
+memory = ExtResource("11_memory")

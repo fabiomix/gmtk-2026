@@ -1,13 +1,15 @@
 extends "res://tests/test_base.gd"
 ## The optimal route that also completes the investigation, in one run:
-## main route up to the exit room, archive key, back to the archive
-## (filing cabinet: lab report), back to the exit. Measures the time.
+## main route up to the exit room, guard log (archive cabinet code), back to
+## the archive (filing cabinet: lab report), back to the exit. Measures the time.
 
 var run_manager: Node
+var game_manager: Node
 
 
 func run_tests() -> void:
 	run_manager = root.get_node("RunManager")
+	game_manager = root.get_node("GameManager")
 	var start_tick := Engine.get_physics_frames()
 
 	# Main route up to the exit room (see test_route_escape.gd).
@@ -29,11 +31,11 @@ func run_tests() -> void:
 	await press_interact()                                 # badge door
 	await walk_into_door(&"move_right")                    # -> exit room (1,3)
 
-	# Archive key on the guard's desk.
-	await walk_to(EXIT_ROOM, Vector2i(4, 2))
+	# Guard log on the desk: the archive cabinet code.
+	await walk_to(EXIT_ROOM, Vector2i(5, 2))
 	await face(Vector2i.UP)
 	await press_interact()
-	check("archive key collected", run_manager.has_item(&"archive_key"), true)
+	check("code learned", game_manager.has_memory(&"archive_cabinet_code"), true)
 
 	# Back to the archive.
 	await walk_to(EXIT_ROOM, Vector2i(1, 3))

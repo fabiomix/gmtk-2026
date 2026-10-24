@@ -2,6 +2,11 @@
 
 [ext_resource type="TileSet" path="res://world/tiles/lab_tileset.tres" id="1_24mg0"]
 [ext_resource type="PackedScene" path="res://world/door.tscn" id="2_door"]
+[ext_resource type="PackedScene" path="res://interactables/note.tscn" id="9_note"]
+[ext_resource type="Texture2D" path="res://assets/sprites/sign.png" id="10_texture"]
+[ext_resource type="Resource" path="res://data/memories/corridor_sign.tres" id="11_memory"]
+[ext_resource type="Texture2D" path="res://assets/sprites/evacuation_plan.png" id="12_plan_texture"]
+[ext_resource type="Resource" path="res://data/memories/evacuation_plan.tres" id="13_plan_memory"]
 
 [node name="Corridor" type="Node2D" unique_id=660715815]
 
@@ -35,3 +40,15 @@ target_door_id = &"storage_north"
 inside_direction = Vector2i(0, -1)
 
 [node name="Items" type="Node2D" parent="." unique_id=1643066840]
+
+[node name="Sign" parent="Items" unique_id=155612210 instance=ExtResource("9_note")]
+position = Vector2(112, 16)
+prompt = "Read sign"
+texture = ExtResource("10_texture")
+memory = ExtResource("11_memory")
+
+[node name="EvacuationPlan" parent="Items" unique_id=1425783649 instance=ExtResource("9_note")]
+position = Vector2(432, 16)
+prompt = "Read evacuation plan"
+texture = ExtResource("12_plan_texture")
+memory = ExtResource("13_plan_memory")

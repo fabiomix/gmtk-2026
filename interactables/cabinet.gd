@@ -2,9 +2,11 @@
 class_name Cabinet
 extends StaticBody2D
 ## A piece of furniture that holds an item (cabinet, filing cabinet...).
-## It blocks its tile. Face it and interact: if the player has the
-## required_item (or none is required) it opens and the contents go
-## straight into the inventory. The required item is not consumed.
+## It blocks its tile. Face it and interact: it opens if the player has the
+## required_item and knows the required_memory (each only if set), and the
+## contents go straight into the inventory. Nothing is consumed.
+## Interacting while it's closed records its lock_memory in the journal
+## (just a reminder: it's never needed to open it).
 ## It closes again at every new run (the World is rebuilt), except when the
 ## player already carries the contents (kept item): then it starts open and empty.
 ## @tool only to show the texture in the editor; game logic never runs there.
@@ -17,8 +19,12 @@ extends StaticBody2D
 		texture = value
 		if is_node_ready():
 			_sprite.texture = texture
-## Item needed to open it. Empty = it opens freely.
+## Item needed to open it. Empty = no item needed.
 @export var required_item: ItemData
+## Memory needed to open it (e.g. a combination). Empty = no memory needed.
+@export var required_memory: MemoryData
+## Journal note about the lock, recorded when the player interacts with it.
+@export var lock_memory: MemoryData
 ## Item inside. Empty = nothing inside.
 @export var contents: ItemData
 
@@ -45,8 +51,12 @@ func get_prompt() -> String:
 
 ## Interactable: returns the message to show to the player.
 func interact(_player: Player) -> String:
-	if not _can_open():
+	if lock_memory:
+		GameManager.discover(lock_memory)
+	if required_item and not RunManager.has_item(required_item.id):
 		return "Locked. It needs: %s." % required_item.display_name
+	if required_memory and not GameManager.has_memory(required_memory.id):
+		return "Locked. You need the %s." % required_memory.title.to_lower()
 	_is_open = true
 	_sprite.frame = 1
 	if contents == null:
@@ -56,4 +66,6 @@ func interact(_player: Player) -> String:
 
 
 func _can_open() -> bool:
-	return required_item == null or RunManager.has_item(required_item.id)
+	var has_item := required_item == null or RunManager.has_item(required_item.id)
+	var knows := required_memory == null or GameManager.has_memory(required_memory.id)
+	return has_item and knows
