@@ -16,6 +16,21 @@ extends SceneTree
 ## One tile takes 10 physics frames at 6 tiles/s: wait a bit more.
 const STEP_FRAMES := 12
 
+## Room origins in the World (see world/world.tscn).
+const CELL := Vector2(0, 0)
+const CORRIDOR := Vector2(1024, 0)
+const ARCHIVE := Vector2(2048, 0)
+const STORAGE := Vector2(3072, 0)
+const LAB := Vector2(4096, 0)
+const EXIT_ROOM := Vector2(5120, 0)
+
+const DIRECTION_ACTIONS := {
+	Vector2i.UP: &"move_up",
+	Vector2i.DOWN: &"move_down",
+	Vector2i.LEFT: &"move_left",
+	Vector2i.RIGHT: &"move_right",
+}
+
 var main: Node
 var world: Node2D
 var player: Player
@@ -119,6 +134,50 @@ func walk_into_door(action: StringName, max_frames := 120) -> bool:
 		await physics_frame
 	await frames(2)
 	return warped
+
+
+## Walks like a real player (key held down) to a tile of the room at
+## room_origin: first horizontally then vertically, or the opposite.
+## The path must be free; fails the test if the player gets stuck.
+func walk_to(room_origin: Vector2, tile: Vector2i, vertical_first := false) -> void:
+	var here := tile_of_player(room_origin)
+	var corner := Vector2i(here.x, tile.y) if vertical_first else Vector2i(tile.x, here.y)
+	await _walk_line(room_origin, corner)
+	await _walk_line(room_origin, tile)
+
+
+func _walk_line(room_origin: Vector2, tile: Vector2i) -> void:
+	var here := tile_of_player(room_origin)
+	if here == tile:
+		return
+	var target := room_origin + Vector2(tile * Player.TILE_SIZE) + Vector2.ONE * (Player.TILE_SIZE / 2.0)
+	var action: StringName = DIRECTION_ACTIONS[Vector2i((tile - here).sign())]
+	Input.action_press(action)
+	# Release during the last step, so the player stops exactly on the tile.
+	var frames_left := 600
+	while player._target_position != target and frames_left > 0:
+		await physics_frame
+		frames_left -= 1
+	Input.action_release(action)
+	while player._is_moving:
+		await physics_frame
+	check("walked to %s" % tile, tile_of_player(room_origin), tile)
+
+
+## Turns towards a direction without moving (the tile there must be blocked).
+func face(direction: Vector2i) -> void:
+	await step(DIRECTION_ACTIONS[direction])
+
+
+## Holds a direction until the run ends (used to walk into the Exit).
+func walk_until_run_ends(action: StringName, run_manager: Node, max_frames := 600) -> void:
+	Input.action_press(action)
+	for i in max_frames:
+		await physics_frame
+		if not run_manager.is_playing():
+			break
+	Input.action_release(action)
+	await frames(2)
 
 
 ## Tile coordinates of the player inside the room at room_origin.

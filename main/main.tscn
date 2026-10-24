@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" path="res://ui/hud.tscn" id="2_hud"]
 [ext_resource type="PackedScene" path="res://ui/pause_menu.tscn" id="3_pause_menu"]
 [ext_resource type="PackedScene" path="res://ui/capture_screen.tscn" id="4_capture_screen"]
+[ext_resource type="PackedScene" path="res://ui/escape_screen.tscn" id="5_escape_screen"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_script")
@@ -13,3 +14,5 @@ script = ExtResource("1_script")
 [node name="PauseMenu" parent="." instance=ExtResource("3_pause_menu")]
 
 [node name="CaptureScreen" parent="." instance=ExtResource("4_capture_screen")]
+
+[node name="EscapeScreen" parent="." instance=ExtResource("5_escape_screen")]

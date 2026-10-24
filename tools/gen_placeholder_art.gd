@@ -17,6 +17,11 @@ func _initialize() -> void:
 	_door()
 	_screwdriver()
 	_security_badge()
+	_archive_key()
+	_lab_report()
+	_cabinet()
+	_filing_cabinet()
+	_exit()
 	quit()
 
 
@@ -92,3 +97,66 @@ func _security_badge() -> void:
 	img.fill_rect(Rect2i(10, 14, 5, 6), Color("8a8f99"))     # photo
 	img.fill_rect(Rect2i(18, 15, 4, 3), Color("d9a400"))     # chip
 	img.save_png("res://assets/sprites/items/security_badge.png")
+
+
+func _archive_key() -> void:
+	var img := Image.create(32, 32, false, Image.FORMAT_RGBA8)
+	var brass := Color("d9a400")
+	img.fill_rect(Rect2i(8, 10, 10, 10), brass)             # bow
+	img.fill_rect(Rect2i(11, 13, 4, 4), Color(0, 0, 0, 0))  # hole in the bow
+	img.fill_rect(Rect2i(18, 14, 8, 2), brass)              # shaft
+	img.fill_rect(Rect2i(22, 16, 2, 3), brass)              # tooth
+	img.fill_rect(Rect2i(25, 16, 1, 4), brass)              # tooth
+	img.save_png("res://assets/sprites/items/archive_key.png")
+
+
+func _lab_report() -> void:
+	var img := Image.create(32, 32, false, Image.FORMAT_RGBA8)
+	img.fill_rect(Rect2i(8, 6, 16, 21), Color("c9a86a"))    # folder
+	img.fill_rect(Rect2i(8, 4, 7, 3), Color("c9a86a"))      # folder tab
+	img.fill_rect(Rect2i(10, 9, 12, 15), Color("f2efe6"))   # paper
+	img.fill_rect(Rect2i(10, 12, 12, 3), Color("d33a3a"))   # "TOP SECRET" stripe
+	for y in [17, 19, 21]:
+		img.fill_rect(Rect2i(11, y, 10, 1), Color("8a8f99")) # text lines
+	img.save_png("res://assets/sprites/items/lab_report.png")
+
+
+## Metal cabinet, 2 frames: closed (screwed shut) | open (empty inside)
+func _cabinet() -> void:
+	var img := Image.create(64, 32, false, Image.FORMAT_RGBA8)
+	for frame in 2:
+		var o := frame * 32
+		img.fill_rect(Rect2i(o + 4, 2, 24, 29), Color("5d626b"))  # body
+		img.fill_rect(Rect2i(o + 6, 4, 20, 25), Color("7d8590"))  # door
+	for p in [Vector2i(7, 5), Vector2i(23, 5), Vector2i(7, 26), Vector2i(23, 26)]:
+		img.fill_rect(Rect2i(p, Vector2i(2, 2)), Color("d9d9d9"))  # screws
+	img.fill_rect(Rect2i(32 + 6, 4, 20, 25), Color("1b1e24"))     # open: dark inside
+	img.fill_rect(Rect2i(32 + 6, 16, 20, 1), Color("3a3f4b"))     # open: shelf
+	img.save_png("res://assets/sprites/cabinet.png")
+
+
+## Filing cabinet, 2 frames: closed (keyhole) | open (top drawer pulled out)
+func _filing_cabinet() -> void:
+	var img := Image.create(64, 32, false, Image.FORMAT_RGBA8)
+	for frame in 2:
+		var o := frame * 32
+		img.fill_rect(Rect2i(o + 6, 2, 20, 29), Color("6b5a45"))  # body
+		for y in [4, 13, 22]:
+			img.fill_rect(Rect2i(o + 8, y, 16, 7), Color("8c7658"))   # drawers
+			img.fill_rect(Rect2i(o + 13, y + 3, 6, 1), Color("3a3026"))  # handles
+	img.fill_rect(Rect2i(15, 2, 2, 2), Color("d9a400"))            # closed: keyhole
+	img.fill_rect(Rect2i(32 + 8, 4, 16, 7), Color("1b1e24"))       # open: empty drawer
+	img.save_png("res://assets/sprites/filing_cabinet.png")
+
+
+## Exit door in the wall: frame + green "exit" light + arrow
+func _exit() -> void:
+	var img := Image.create(32, 32, false, Image.FORMAT_RGBA8)
+	img.fill_rect(Rect2i(0, 0, 32, 32), Color("5d626b"))      # frame
+	img.fill_rect(Rect2i(4, 6, 24, 26), Color("2f6b3a"))      # green door
+	img.fill_rect(Rect2i(10, 1, 12, 4), Color("5ce07a"))      # exit light
+	img.fill_rect(Rect2i(9, 17, 12, 3), Color("e8e8e8"))      # arrow shaft
+	img.fill_rect(Rect2i(19, 14, 2, 9), Color("e8e8e8"))      # arrow head
+	img.fill_rect(Rect2i(21, 16, 2, 5), Color("e8e8e8"))
+	img.fill_rect(Rect2i(23, 18, 1, 1), Color("e8e8e8"))
+	img.save_png("res://assets/sprites/exit.png")

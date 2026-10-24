@@ -1,10 +1,8 @@
 extends "res://tests/test_base.gd"
-## Pickups, inventory, HUD and a door that requires an item.
-## Cell: screwdriver at (4,1). Corridor (1024,0): badge at (16,2),
-## corridor_north at (9,0) needs the badge and leads to Archive (2048,0).
-
-const CORRIDOR := Vector2(1024, 0)
-const ARCHIVE := Vector2(2048, 0)
+## Pickups, cabinets, HUD and a door that requires an item.
+## Storage: screwdriver at (8,6). Laboratory: cabinet at (6,1) needs the
+## screwdriver and holds the badge; door lab_east at (13,4) needs the badge.
+## Exit room: archive key at (4,1).
 
 var last_message := ""
 ## Autoload names are not known when a --script is compiled: get the node instead.
@@ -19,52 +17,73 @@ func run_tests() -> void:
 	var prompt_label: Label = hud.get_node("%PromptLabel")
 	check("HUD starts empty", inventory_label.text, "Items: -")
 
-	# Screwdriver in the cell: it blocks its tile, face it and interact.
-	await step(&"move_right", 2)
-	await step(&"move_up", 2)
-	check("blocked by the screwdriver", tile_of_player(Vector2.ZERO), Vector2i(4, 2))
-	check("prompt shown", prompt_label.text, "[E] Pick up Screwdriver")
-	await press_interact()
-	check("screwdriver in inventory", run_manager.has_item(&"screwdriver"), true)
-	check("pickup message", last_message, "Picked up: Screwdriver.")
-	check("HUD inventory", inventory_label.text, "Items: Screwdriver")
-	check("prompt cleared", prompt_label.text, "")
-	await step(&"move_up")
-	check("tile free after pickup", tile_of_player(Vector2.ZERO), Vector2i(4, 1))
-
-	# Locked door without the badge.
-	await step(&"move_down", 2)
+	# Laboratory first, without the screwdriver.
 	await walk_into_door(&"move_right")
-	await step(&"move_right", 8)
-	await step(&"move_up", 2)
-	check("facing the locked door", tile_of_player(CORRIDOR), Vector2i(9, 1))
+	await walk_to(CORRIDOR, Vector2i(16, 2))
+	await walk_into_door(&"move_right")
+	await walk_to(LAB, Vector2i(6, 2))
+	await face(Vector2i.UP)
+	check("cabinet prompt without screwdriver", prompt_label.text, "[E] Examine cabinet")
+	await press_interact()
+	check("cabinet says what it needs", last_message, "Locked. It needs: Screwdriver.")
+	var cabinet: Node = world.get_node("Rooms/Laboratory/Items/Cabinet")
+	check("cabinet still closed", cabinet.get_node("Sprite2D").frame, 0)
+
+	await walk_to(LAB, Vector2i(12, 4))
+	await face(Vector2i.RIGHT)
 	check("door prompt without badge", prompt_label.text, "[E] Examine door")
 	await press_interact()
 	check("door says what it needs", last_message, "Locked. It needs: Security badge.")
-	var door: Node = world.get_node("Rooms/Corridor/Doors/CorridorNorth")
-	check("door still locked", door.locked, true)
 
-	# Get the badge at the end of the corridor.
-	await step(&"move_down")
-	await step(&"move_right", 7)
-	check("blocked by the badge", tile_of_player(CORRIDOR), Vector2i(15, 2))
+	# Screwdriver in the storage: it blocks its tile, face it and interact.
+	await walk_to(LAB, Vector2i(1, 4))
+	await walk_into_door(&"move_left")
+	await walk_to(CORRIDOR, Vector2i(9, 2))
+	await walk_into_door(&"move_down")
+	await walk_to(STORAGE, Vector2i(7, 6), true)
+	await face(Vector2i.RIGHT)
+	check("pickup prompt", prompt_label.text, "[E] Pick up Screwdriver")
 	await press_interact()
-	check("badge in inventory", run_manager.has_item(&"security_badge"), true)
-	check("HUD inventory with 2 items", inventory_label.text, "Items: Screwdriver, Security badge")
+	check("pickup message", last_message, "Picked up: Screwdriver.")
+	check("HUD inventory", inventory_label.text, "Items: Screwdriver")
+	check("pickup removed", world.has_node("Rooms/Storage/Items/Screwdriver"), false)
+	await step(&"move_right")
+	check("tile free after pickup", tile_of_player(STORAGE), Vector2i(8, 6))
 
-	# Unlock the door and go through.
-	await step(&"move_left", 6)
-	await step(&"move_up", 2)
+	# Back to the laboratory: open the cabinet, unlock the door.
+	await walk_to(STORAGE, Vector2i(5, 6))
+	await walk_into_door(&"move_up")
+	await walk_to(CORRIDOR, Vector2i(9, 2))
+	await walk_into_door(&"move_right")
+	await walk_to(LAB, Vector2i(6, 2))
+	await face(Vector2i.UP)
+	check("cabinet prompt with screwdriver", prompt_label.text, "[E] Open cabinet")
+	await press_interact()
+	check("cabinet message", last_message, "Opened. Found: Security badge.")
+	check("cabinet open", cabinet.get_node("Sprite2D").frame, 1)
+	check("badge in inventory", run_manager.has_item(&"security_badge"), true)
+	check("screwdriver not consumed", run_manager.has_item(&"screwdriver"), true)
+	check("open cabinet has no prompt", prompt_label.text, "")
+	await press_interact()
+	check("open cabinet gives nothing more", run_manager.inventory.size(), 2)
+
+	await walk_to(LAB, Vector2i(12, 4))
+	await face(Vector2i.RIGHT)
 	check("door prompt with badge", prompt_label.text, "[E] Unlock with Security badge")
 	await press_interact()
 	check("unlock message", last_message, "Unlocked with Security badge.")
-	check("door unlocked", door.locked, false)
-	check("badge not consumed", run_manager.has_item(&"security_badge"), true)
-	await frames(2)
-	var warped := await walk_into_door(&"move_up")
-	check("warp into the archive", warped, true)
-	check("arrived in the archive", tile_of_player(ARCHIVE), Vector2i(5, 5))
+	check("door unlocked", world.get_node("Rooms/Laboratory/Doors/LabEast").locked, false)
+	var warped := await walk_into_door(&"move_right")
+	check("warp into the exit room", warped, true)
+	check("arrived in the exit room", tile_of_player(EXIT_ROOM), Vector2i(1, 3))
+
+	# Archive key on the guard's desk.
+	await walk_to(EXIT_ROOM, Vector2i(4, 2))
+	await face(Vector2i.UP)
+	await press_interact()
+	check("key message", last_message, "Picked up: Archive key.")
+	check("HUD inventory with 3 items", inventory_label.text, "Items: Screwdriver, Security badge, Archive key")
 
 	# No duplicates.
 	run_manager.add_item(load("res://data/items/screwdriver.tres"))
-	check("no duplicate items", run_manager.inventory.size(), 2)
+	check("no duplicate items", run_manager.inventory.size(), 3)

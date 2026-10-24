@@ -6,8 +6,11 @@ extends Node
 signal inventory_changed
 ## Emitted exactly once per run, when the countdown reaches zero.
 signal captured
+## Emitted exactly once, when the spy reaches the exit.
+signal escaped
 
-enum State { PLAYING, CAPTURED }
+## A run ends only once: either captured or escaped, never both.
+enum State { PLAYING, CAPTURED, ESCAPED }
 
 ## Length of a run in seconds.
 var run_duration := 120.0
@@ -41,6 +44,14 @@ func _physics_process(delta: float) -> void:
 		# so the capture happens only once.
 		state = State.CAPTURED
 		captured.emit()
+
+
+## Ends the run with a successful escape (called by the Exit).
+func escape() -> void:
+	if state != State.PLAYING:
+		return
+	state = State.ESCAPED
+	escaped.emit()
 
 
 func is_playing() -> bool:

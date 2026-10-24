@@ -9,10 +9,12 @@ var _world: Node2D
 
 @onready var _hud: HUD = $HUD
 @onready var _capture_screen: CaptureScreen = $CaptureScreen
+@onready var _escape_screen: EscapeScreen = $EscapeScreen
 
 
 func _ready() -> void:
 	RunManager.captured.connect(_on_run_captured)
+	RunManager.escaped.connect(_on_run_escaped)
 	_capture_screen.items_chosen.connect(_on_capture_items_chosen)
 	_start_run()
 
@@ -41,6 +43,12 @@ func _start_run() -> void:
 func _on_run_captured() -> void:
 	get_tree().paused = true
 	_capture_screen.open()
+
+
+## The spy reached the exit: freeze the game and show the escape screen.
+func _on_run_escaped() -> void:
+	get_tree().paused = true
+	_escape_screen.open()
 
 
 func _on_capture_items_chosen(ids: Array[StringName]) -> void:

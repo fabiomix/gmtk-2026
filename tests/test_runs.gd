@@ -53,16 +53,16 @@ func run_tests() -> void:
 	check("badge in inventory", run_manager.has_item(&"security_badge"), true)
 	check("screwdriver confiscated", run_manager.has_item(&"screwdriver"), false)
 	check("HUD shows the kept item", inventory_label.text, "Items: Security badge")
-	check("kept badge not duplicated in the World", has_pickup("Corridor", "SecurityBadge"), false)
-	check("screwdriver back in its place", has_pickup("Cell", "Screwdriver"), true)
-	check("corridor door locked again", world.get_node("Rooms/Corridor/Doors/CorridorNorth").locked, true)
+	check("kept badge not duplicated: its cabinet starts open and empty", lab_cabinet_open(), true)
+	check("screwdriver back in its place", has_pickup("Storage", "Screwdriver"), true)
+	check("badge door locked again", world.get_node("Rooms/Laboratory/Doors/LabEast").locked, true)
 
 	# --- Run 2 capture: the kept badge is listed again; keep nothing.
 	await capture()
 	check("kept item listed again", checkboxes().size(), 1)
 	await confirm()
 	check("nothing kept", run_manager.inventory.is_empty(), true)
-	check("badge back in its place", has_pickup("Corridor", "SecurityBadge"), true)
+	check("badge back in its cabinet", lab_cabinet_open(), false)
 
 	# --- 2 slots (configuration): both items can be kept.
 	game_manager.keep_slots = 2
@@ -75,7 +75,7 @@ func run_tests() -> void:
 	box_for("Security badge").button_pressed = true
 	await confirm()
 	check("both items kept", run_manager.inventory.size(), 2)
-	check("no pickup duplicated", [has_pickup("Cell", "Screwdriver"), has_pickup("Corridor", "SecurityBadge")], [false, false])
+	check("no item duplicated", [has_pickup("Storage", "Screwdriver"), lab_cabinet_open()], [false, true])
 	game_manager.keep_slots = 1
 
 	# --- Capture in the middle of a warp: the new run starts clean.
@@ -93,6 +93,23 @@ func run_tests() -> void:
 	check("player in the cell", player.global_position, CELL_START)
 	await step(&"move_left")
 	check("player can move again", player.global_position, CELL_START + Vector2(-32, 0))
+
+	# --- Two consecutive runs: get caught keeping the badge, then escape.
+	run_manager.add_item(badge)
+	await capture()
+	box_for("Security badge").button_pressed = true
+	await confirm()
+	await walk_into_door(&"move_right")
+	await walk_to(CORRIDOR, Vector2i(16, 2))
+	await walk_into_door(&"move_right")
+	await walk_to(LAB, Vector2i(12, 4))
+	await face(Vector2i.RIGHT)
+	await press_interact()
+	check("kept badge opens the door", world.get_node("Rooms/Laboratory/Doors/LabEast").locked, false)
+	await walk_into_door(&"move_right")
+	await walk_until_run_ends(&"move_right", run_manager)
+	check("escaped in the next run", run_manager.state, run_manager.State.ESCAPED)
+	check("escape screen visible", main.get_node("EscapeScreen").visible, true)
 
 
 ## Forces the countdown to end and waits for the capture screen.
@@ -121,3 +138,7 @@ func box_for(item_name: String) -> CheckBox:
 
 func has_pickup(room: String, pickup: String) -> bool:
 	return world.has_node("Rooms/%s/Items/%s" % [room, pickup])
+
+
+func lab_cabinet_open() -> bool:
+	return world.get_node("Rooms/Laboratory/Items/Cabinet").get_node("Sprite2D").frame == 1

@@ -1,25 +1,37 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://world/world.gd" id="1_script"]
-[ext_resource type="PackedScene" path="res://world/rooms/cell.tscn" id="2_cell"]
-[ext_resource type="PackedScene" path="res://world/rooms/corridor.tscn" id="3_corridor"]
-[ext_resource type="PackedScene" path="res://player/player.tscn" id="4_player"]
+[ext_resource type="PackedScene" path="res://player/player.tscn" id="2_player"]
+[ext_resource type="PackedScene" path="res://world/rooms/cell.tscn" id="3_cell"]
+[ext_resource type="PackedScene" path="res://world/rooms/corridor.tscn" id="4_corridor"]
 [ext_resource type="PackedScene" path="res://world/rooms/archive.tscn" id="5_archive"]
+[ext_resource type="PackedScene" path="res://world/rooms/storage.tscn" id="6_storage"]
+[ext_resource type="PackedScene" path="res://world/rooms/laboratory.tscn" id="7_laboratory"]
+[ext_resource type="PackedScene" path="res://world/rooms/exit_room.tscn" id="8_exit_room"]
 
 [node name="World" type="Node2D"]
 script = ExtResource("1_script")
 
 [node name="Rooms" type="Node2D" parent="."]
 
-[node name="Cell" parent="Rooms" instance=ExtResource("2_cell")]
+[node name="Cell" parent="Rooms" instance=ExtResource("3_cell")]
 
-[node name="Corridor" parent="Rooms" instance=ExtResource("3_corridor")]
+[node name="Corridor" parent="Rooms" instance=ExtResource("4_corridor")]
 position = Vector2(1024, 0)
 
 [node name="Archive" parent="Rooms" instance=ExtResource("5_archive")]
 position = Vector2(2048, 0)
 
-[node name="Player" parent="." instance=ExtResource("4_player")]
+[node name="Storage" parent="Rooms" instance=ExtResource("6_storage")]
+position = Vector2(3072, 0)
+
+[node name="Laboratory" parent="Rooms" instance=ExtResource("7_laboratory")]
+position = Vector2(4096, 0)
+
+[node name="ExitRoom" parent="Rooms" instance=ExtResource("8_exit_room")]
+position = Vector2(5120, 0)
+
+[node name="Player" parent="." instance=ExtResource("2_player")]
 position = Vector2(80, 112)
 
 [node name="ScreenFade" type="CanvasLayer" parent="."]
