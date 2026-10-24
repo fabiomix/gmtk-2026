@@ -18,7 +18,6 @@ func run_tests() -> void:
 	capture_screen = main.get_node("CaptureScreen")
 	screwdriver = load("res://data/items/screwdriver.tres")
 	badge = load("res://data/items/security_badge.tres")
-	var inventory_label: Label = main.get_node("HUD").get_node("%InventoryLabel")
 
 	check("1 slot by default", game_manager.keep_slots, 1)
 	check("nothing kept at start", game_manager.kept_item_ids.is_empty(), true)
@@ -52,7 +51,7 @@ func run_tests() -> void:
 	check("kept ids", game_manager.kept_item_ids, [&"security_badge"] as Array[StringName])
 	check("badge in inventory", run_manager.has_item(&"security_badge"), true)
 	check("screwdriver confiscated", run_manager.has_item(&"screwdriver"), false)
-	check("HUD shows the kept item", inventory_label.text, "Items: Security badge")
+	check("HUD shows the kept item", hud_items(), ["Security badge"] as Array[String])
 	check("kept badge not duplicated: its cabinet starts open and empty", lab_cabinet_open(), true)
 	check("screwdriver back in its place", has_pickup("Storage", "Screwdriver"), true)
 	check("badge door locked again", world.get_node("Rooms/Laboratory/Doors/LabEast").locked, true)

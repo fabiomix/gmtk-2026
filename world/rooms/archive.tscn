@@ -10,6 +10,7 @@
 [ext_resource type="Resource" path="res://data/memories/archive_cabinet_code.tres" id="11_code"]
 [ext_resource type="Resource" path="res://data/memories/lock_archive_cabinet.tres" id="12_lock"]
 [ext_resource type="Resource" path="res://data/memories/glasswing_memo.tres" id="13_memo"]
+[ext_resource type="PackedScene" path="res://world/scientist.tscn" id="20_scientist"]
 
 [node name="Archive" type="Node2D" unique_id=280545648]
 
@@ -40,3 +41,9 @@ position = Vector2(240, 48)
 prompt = "Read memo"
 texture = ExtResource("10_texture")
 memory = ExtResource("13_memo")
+
+[node name="People" type="Node2D" parent="." unique_id=484509076]
+
+[node name="Scientist" parent="People" unique_id=762030043 instance=ExtResource("20_scientist")]
+position = Vector2(80, 80)
+facing = Vector2i(0, -1)

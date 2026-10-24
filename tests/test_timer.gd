@@ -15,11 +15,11 @@ func run_tests() -> void:
 	var capture_screen: CanvasLayer = main.get_node("CaptureScreen")
 
 	# Countdown runs in real time: 60 physics ticks = 1 second.
-	check("run lasts 120 s", run_manager.run_duration, 120.0)
+	check("run lasts 60 s", run_manager.run_duration, 60.0)
 	var t0: float = run_manager.time_left
 	await frames(60)
 	check("60 ticks = 1 s", snappedf(t0 - run_manager.time_left, 0.001), 1.0)
-	check("HUD shows the countdown", timer_label.text, "1:59")
+	check("HUD shows the countdown", timer_label.text, "0:59")
 
 	# The countdown keeps running during a warp.
 	t0 = run_manager.time_left

@@ -6,5 +6,5 @@
 script = ExtResource("1_script")
 id = &"cell_scratches"
 title = "Scratches on the wall"
-text = "Scratched into the cell wall by someone before you: \"{patrol_minutes} MINUTES BETWEEN ROUNDS. THEN THEY COME LOOKING.\""
+text = "Scratched into the cell wall by someone before you: \"{patrol} BETWEEN ROUNDS. THEN THEY COME LOOKING.\""
 category = 0

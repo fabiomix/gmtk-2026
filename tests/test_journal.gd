@@ -45,7 +45,13 @@ func run_tests() -> void:
 	check("no duplicate memory", game_manager.discovered_memory_ids.size(), 1)
 	await send_action(&"journal")
 	check("journal shows the patrol time from the settings",
-			journal_text.get_parsed_text().contains("2 MINUTES BETWEEN ROUNDS"), true)
+			journal_text.get_parsed_text().contains("1 MINUTE BETWEEN ROUNDS"), true)
+	var scratches: Resource = load("res://data/memories/cell_scratches.tres")
+	run_manager.run_duration = 120.0
+	check("plural with 120 s", scratches.get_text().contains("2 MINUTES BETWEEN"), true)
+	run_manager.run_duration = 90.0
+	check("seconds with 90 s", scratches.get_text().contains("90 SECONDS BETWEEN"), true)
+	run_manager.run_duration = 60.0
 	await send_action(&"journal")
 	check("J closes the journal too", journal.visible, false)
 
@@ -102,6 +108,12 @@ func run_tests() -> void:
 	await send_action(&"journal")
 	check("investigation section", journal_text.get_parsed_text().contains("Investigation"), true)
 	await send_action(&"journal")
+
+	# The scientist at the shelf (2,2): solid, and nothing to interact with.
+	await walk_to(ARCHIVE, Vector2i(3, 2))
+	await step(&"move_left")
+	check("scientists can't be walked through", tile_of_player(ARCHIVE), Vector2i(3, 2))
+	check("scientists have no prompt", prompt_label.text, "")
 
 	# Memories survive a capture; the report (not kept) is lost.
 	var known: int = game_manager.discovered_memory_ids.size()

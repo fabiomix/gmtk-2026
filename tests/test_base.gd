@@ -78,6 +78,14 @@ func dismiss_intro() -> void:
 		await frames(2)
 
 
+## Names of the items shown in the HUD (one icon per item, name in the tooltip).
+func hud_items() -> Array[String]:
+	var names: Array[String] = []
+	for icon in main.get_node("HUD").get_node("%InventoryIcons").get_children():
+		names.append(icon.tooltip_text)
+	return names
+
+
 ## Main creates a new World at every run: call this after a new run starts.
 func refresh_world() -> void:
 	world = main.get_node("World")

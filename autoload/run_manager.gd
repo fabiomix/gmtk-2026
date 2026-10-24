@@ -13,7 +13,7 @@ signal escaped
 enum State { PLAYING, CAPTURED, ESCAPED }
 
 ## Length of a run in seconds.
-var run_duration := 120.0
+var run_duration := 60.0
 ## Seconds left before the guards arrive.
 var time_left := run_duration
 var state := State.PLAYING

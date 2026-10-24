@@ -1,6 +1,6 @@
 class_name HUD
 extends CanvasLayer
-## Heads-up display: run inventory (top left), countdown (top right),
+## Heads-up display: run inventory icons (top left), countdown (top right),
 ## journal updates, short messages and interaction prompt (bottom).
 ## Inventory, countdown and journal updates come from the autoloads;
 ## prompt and messages are fed by Main (from the Player signals).
@@ -12,7 +12,7 @@ const MESSAGE_TIME := 2.5
 const LOW_TIME := 20.0
 const LOW_TIME_COLOR := Color(1, 0.35, 0.35)
 
-@onready var _inventory_label: Label = %InventoryLabel
+@onready var _inventory_icons: HBoxContainer = %InventoryIcons
 @onready var _timer_label: Label = %TimerLabel
 @onready var _journal_label: Label = %JournalLabel
 @onready var _message_label: Label = %MessageLabel
@@ -52,11 +52,17 @@ static func format_time(seconds: float) -> String:
 	return "%d:%02d" % [floori(total / 60.0), total % 60]
 
 
+## One icon per carried item, at its native 32 px (pixel art scales badly
+## to non-integer sizes).
 func _update_inventory() -> void:
-	var names := PackedStringArray()
+	for icon in _inventory_icons.get_children():
+		_inventory_icons.remove_child(icon)
+		icon.queue_free()
 	for item in RunManager.inventory:
-		names.append(item.display_name)
-	_inventory_label.text = "Items: " + ("-" if names.is_empty() else ", ".join(names))
+		var icon := TextureRect.new()
+		icon.texture = item.icon
+		icon.tooltip_text = item.display_name
+		_inventory_icons.add_child(icon)
 
 
 func _on_message_timer_timeout() -> void:

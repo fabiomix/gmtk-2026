@@ -13,9 +13,8 @@ func run_tests() -> void:
 	run_manager = root.get_node("RunManager")
 	player.interacted.connect(func(m: String) -> void: last_message = m)
 	var hud: Node = main.get_node("HUD")
-	var inventory_label: Label = hud.get_node("%InventoryLabel")
 	var prompt_label: Label = hud.get_node("%PromptLabel")
-	check("HUD starts empty", inventory_label.text, "Items: -")
+	check("HUD starts empty", hud_items(), [] as Array[String])
 
 	# Laboratory first, without the screwdriver.
 	await walk_into_door(&"move_right")
@@ -45,7 +44,7 @@ func run_tests() -> void:
 	check("pickup prompt", prompt_label.text, "[E] Pick up Screwdriver")
 	await press_interact()
 	check("pickup message", last_message, "Picked up: Screwdriver.")
-	check("HUD inventory", inventory_label.text, "Items: Screwdriver")
+	check("HUD shows the icon", hud_items(), ["Screwdriver"] as Array[String])
 	check("pickup removed", world.has_node("Rooms/Storage/Items/Screwdriver"), false)
 	await step(&"move_right")
 	check("tile free after pickup", tile_of_player(STORAGE), Vector2i(8, 6))
@@ -76,7 +75,7 @@ func run_tests() -> void:
 	var warped := await walk_into_door(&"move_right")
 	check("warp into the exit room", warped, true)
 	check("arrived in the exit room", tile_of_player(EXIT_ROOM), Vector2i(1, 3))
-	check("HUD inventory with 2 items", inventory_label.text, "Items: Screwdriver, Security badge")
+	check("HUD shows 2 icons", hud_items(), ["Screwdriver", "Security badge"] as Array[String])
 
 	# No duplicates.
 	run_manager.add_item(load("res://data/items/screwdriver.tres"))

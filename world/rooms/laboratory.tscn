@@ -8,6 +8,7 @@
 [ext_resource type="Resource" path="res://data/items/security_badge.tres" id="6_badge"]
 [ext_resource type="Resource" path="res://data/memories/lock_lab_door.tres" id="12_lock_door"]
 [ext_resource type="Resource" path="res://data/memories/lock_lab_cabinet.tres" id="13_lock_cabinet"]
+[ext_resource type="PackedScene" path="res://world/scientist.tscn" id="20_scientist"]
 
 [node name="Laboratory" type="Node2D" unique_id=1515028218]
 
@@ -40,3 +41,13 @@ texture = ExtResource("4_texture")
 required_item = ExtResource("5_screwdriver")
 lock_memory = ExtResource("13_lock_cabinet")
 contents = ExtResource("6_badge")
+
+[node name="People" type="Node2D" parent="." unique_id=1300689915]
+
+[node name="ScientistWest" parent="People" unique_id=2056975755 instance=ExtResource("20_scientist")]
+position = Vector2(80, 208)
+facing = Vector2i(1, 0)
+
+[node name="ScientistEast" parent="People" unique_id=434706620 instance=ExtResource("20_scientist")]
+position = Vector2(368, 208)
+facing = Vector2i(-1, 0)

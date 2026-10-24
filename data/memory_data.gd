@@ -13,16 +13,24 @@ enum Category { NOTE, LOCK, INVESTIGATION }
 ## Short: shown in the HUD when discovered and as heading in the journal.
 @export var title: String
 ## Full text, shown only in the journal.
-## "{patrol_minutes}" is replaced with the run duration in minutes.
+## "{patrol}" is replaced with the run duration in capitals, with the right
+## unit and plural: "1 MINUTE", "2 MINUTES", "90 SECONDS".
 @export_multiline var text: String
 @export var category := Category.NOTE
 
 
 ## The text with its placeholders filled in, so it always matches the settings.
 func get_text() -> String:
-	# One decimal at most, and "2" instead of "2.0".
-	var minutes := String.num(RunManager.run_duration / 60.0, 1).trim_suffix(".0")
-	return text.format({"patrol_minutes": minutes})
+	return text.format({"patrol": patrol_interval()})
+
+
+## The run duration in words, e.g. "1 MINUTE", "2 MINUTES", "90 SECONDS".
+static func patrol_interval() -> String:
+	var seconds := roundi(RunManager.run_duration)
+	if seconds % 60 != 0:
+		return "%d SECONDS" % seconds
+	var minutes := floori(seconds / 60.0)
+	return "%d MINUTE%s" % [minutes, "" if minutes == 1 else "S"]
 
 
 ## Loads the memory definition from its id (file name convention above).
