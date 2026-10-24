@@ -1,0 +1,52 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://ui/intro_screen.gd" id="1_script"]
+
+[node name="IntroScreen" type="CanvasLayer"]
+process_mode = 3
+layer = 30
+script = ExtResource("1_script")
+
+[node name="Background" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Center" type="CenterContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Box" type="VBoxContainer" parent="Center"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Title" type="Label" parent="Center/Box"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.36, 0.88, 0.48, 1)
+theme_override_font_sizes/font_size = 28
+text = "PROJECT GLASSWING"
+horizontal_alignment = 1
+
+[node name="Story" type="Label" parent="Center/Box"]
+layout_mode = 2
+text = "Nineteen days undercover to get inside the Varga Institute.
+You reached sub-level 3. Then someone recognised your face.
+
+They took your gear and locked you in a holding cell.
+The lock is cheap. The guards are not.
+
+Getting out comes first.
+If you can, bring back proof of Project GLASSWING."
+horizontal_alignment = 1
+
+[node name="ContinueButton" type="Button" parent="Center/Box"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Continue"

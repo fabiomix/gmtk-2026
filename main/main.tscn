@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" path="res://ui/capture_screen.tscn" id="4_capture_screen"]
 [ext_resource type="PackedScene" path="res://ui/escape_screen.tscn" id="5_escape_screen"]
 [ext_resource type="PackedScene" path="res://ui/journal.tscn" id="6_journal"]
+[ext_resource type="PackedScene" path="res://ui/intro_screen.tscn" id="7_intro_screen"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_script")
@@ -19,3 +20,5 @@ script = ExtResource("1_script")
 [node name="CaptureScreen" parent="." instance=ExtResource("4_capture_screen")]
 
 [node name="EscapeScreen" parent="." instance=ExtResource("5_escape_screen")]
+
+[node name="IntroScreen" parent="." instance=ExtResource("7_intro_screen")]

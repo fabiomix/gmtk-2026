@@ -33,10 +33,9 @@ theme_override_font_sizes/font_size = 32
 text = "ESCAPED"
 horizontal_alignment = 1
 
-[node name="Story" type="Label" parent="Center/Box"]
+[node name="OutcomeLabel" type="Label" parent="Center/Box"]
+unique_name_in_owner = true
 layout_mode = 2
-text = "You slipped out of the lab
-before the guards could catch you."
 horizontal_alignment = 1
 
 [node name="TimeLabel" type="Label" parent="Center/Box"]
@@ -45,8 +44,17 @@ modulate = Color(1, 1, 1, 0.75)
 layout_mode = 2
 horizontal_alignment = 1
 
-[node name="QuitButton" type="Button" parent="Center/Box"]
-unique_name_in_owner = true
+[node name="Buttons" type="HBoxContainer" parent="Center/Box"]
 layout_mode = 2
 size_flags_horizontal = 4
+theme_override_constants/separation = 12
+
+[node name="NewGameButton" type="Button" parent="Center/Box/Buttons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "New Game"
+
+[node name="QuitButton" type="Button" parent="Center/Box/Buttons"]
+unique_name_in_owner = true
+layout_mode = 2
 text = "Quit"

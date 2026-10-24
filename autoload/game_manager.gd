@@ -15,6 +15,12 @@ var kept_item_ids: Array[StringName] = []
 var discovered_memory_ids: Array[StringName] = []
 
 
+## Starts a new game: forgets kept items and memories.
+func new_game() -> void:
+	kept_item_ids.clear()
+	discovered_memory_ids.clear()
+
+
 ## Called after a capture with the ids chosen by the player.
 func keep_items(ids: Array[StringName]) -> void:
 	if ids.size() > keep_slots:

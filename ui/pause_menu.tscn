@@ -33,12 +33,43 @@ theme_override_font_sizes/font_size = 28
 text = "PAUSED"
 horizontal_alignment = 1
 
-[node name="ResumeButton" type="Button" parent="Center/Box"]
+[node name="MenuBox" type="VBoxContainer" parent="Center/Box"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="ResumeButton" type="Button" parent="Center/Box/MenuBox"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Resume"
 
-[node name="QuitButton" type="Button" parent="Center/Box"]
+[node name="NewGameButton" type="Button" parent="Center/Box/MenuBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "New Game"
+
+[node name="QuitButton" type="Button" parent="Center/Box/MenuBox"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Quit"
+
+[node name="ConfirmBox" type="VBoxContainer" parent="Center/Box"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Question" type="Label" parent="Center/Box/ConfirmBox"]
+layout_mode = 2
+text = "Start a new game?"
+horizontal_alignment = 1
+
+[node name="YesButton" type="Button" parent="Center/Box/ConfirmBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Yes"
+
+[node name="NoButton" type="Button" parent="Center/Box/ConfirmBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "No"

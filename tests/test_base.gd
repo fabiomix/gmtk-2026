@@ -54,6 +54,7 @@ func _initialize() -> void:
 	root.add_child(main)
 	await frames(2)  # Main creates the World in its _ready()
 	refresh_world()
+	await dismiss_intro()
 	await run_tests()
 	OS.remove_logger(_errors)
 	if _errors.count > 0:
@@ -67,6 +68,14 @@ func _initialize() -> void:
 ## Override in each test.
 func run_tests() -> void:
 	pass
+
+
+## A new game starts with the intro (game paused): press Continue.
+func dismiss_intro() -> void:
+	var intro: CanvasLayer = main.get_node("IntroScreen")
+	if intro.visible:
+		intro.get_node("%ContinueButton").pressed.emit()
+		await frames(2)
 
 
 ## Main creates a new World at every run: call this after a new run starts.
