@@ -1,10 +1,10 @@
 # Game Design Document + Prompt di sviluppo — Progetto Godot
 
-> **Stato:** specifica iniziale per MVP  
-> **Motore:** Godot 4.x  
-> **Linguaggio:** GDScript  
-> **Genere:** puzzle / exploration roguelite investigativo  
-> **Visuale:** top-down 2D, stanze collegate da porte  
+> **Stato:** specifica iniziale per MVP
+> **Motore:** Godot 4.x
+> **Linguaggio:** GDScript
+> **Genere:** puzzle / exploration roguelite investigativo
+> **Visuale:** top-down 2D, stanze collegate da porte
 > **Priorità:** realizzare prima un prototipo piccolo, completo e giocabile; rimandare la generazione procedurale alla fase successiva.
 
 ---
